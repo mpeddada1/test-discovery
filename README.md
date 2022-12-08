@@ -30,7 +30,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
 [ERROR] Re-run Maven using the -X switch to enable full debug logging.
 ```
-4) Uncomment the maven-surefire-plugin and re-running `mvn test -Pnative` results in a successful build.
+4) Uncommenting the maven-surefire-plugin and re-running `mvn test -Pnative` results in a successful build.
 5) Running the following command:
 
 ```
