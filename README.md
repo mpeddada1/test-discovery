@@ -156,4 +156,4 @@ Failed generating 'native-tests' after 4.7s.
 ```
 $ vi junit-platform-unique-ids.txt // Copy and paste [engine:junit-vintage]/[runner:com.example.MySampleTest]/[test:testNativeImage(com.example.MySampleTest)]
 ```
-8) Re-run the `native-image` command from step 5.
+8) Re-run the `native-image` command from step 5. This results in a successful run.
