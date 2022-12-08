@@ -151,3 +151,9 @@ Caused by: java.lang.ClassNotFoundException: kotlin.jvm.functions.Function0
 =======================================================================================================================
 Failed generating 'native-tests' after 4.7s.
 ```
+
+7) Manually add the test-ids .txt file to the `target/test-ids/` directory:
+```
+$ vi junit-platform-unique-ids.txt // Copy and paste [engine:junit-vintage]/[runner:com.example.MySampleTest]/[test:testNativeImage(com.example.MySampleTest)]
+```
+8) Re-run the `native-image` command from step 5.
