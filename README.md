@@ -157,3 +157,13 @@ Failed generating 'native-tests' after 4.7s.
 $ vi junit-platform-unique-ids.txt // Copy and paste [engine:junit-vintage]/[runner:com.example.MySampleTest]/[test:testNativeImage(com.example.MySampleTest)]
 ```
 8) Re-run the `native-image` command from step 5. This results in a successful run.
+9) In order to create a test-ids file, the following code needs to be added to the maven-surefire plugin:
+
+```
+   <configuration>
+       <systemProperties>
+           <junit.platform.listeners.uid.tracking.enabled>true</junit.platform.listeners.uid.tracking.enabled>
+           <junit.platform.listeners.uid.tracking.output.dir>${project.basedir}/target/test-ids/</junit.platform.listeners.uid.tracking.output.dir>
+       </systemProperties>
+   </configuration>
+```
