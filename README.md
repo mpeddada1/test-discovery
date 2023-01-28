@@ -2,6 +2,8 @@
 
 To reproduce:
 
+## With native-maven-plugin
+
 1) Call `mvn clean install`
 2) Call `mvn test -Pnative`
 3) Notice the following error:
@@ -30,12 +32,25 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
 [ERROR] Re-run Maven using the -X switch to enable full debug logging.
 ```
-4) Uncommenting the maven-surefire-plugin and re-running `mvn test -Pnative` results in a successful build.
-5) Running the following command:
+4) Uncomment the [maven-surefire-plugin setup](https://github.com/mpeddada1/test-discovery/blob/b0f268c62450936904e928595572c8e8206e5da7/pom.xml#L33-L47) and re-run Steps 1-2 to see a successful build.
+
+The steps in this section rely on the native-maven-plugin and run the tests twice (before native-image compilation and after).
+
+## Without native-maven-plugin
+
+Steps 1-2 assume that you already have the `test-ids/` directory populated from the "With native-maven-plugin" section.
+Steps 3-5 show how tests can be run with a manually populated `test-ids` directory.
+
+1) Call `mvn clean install -DskipTests` to populate the `target/test-classes` directory with the compiled test class.
+
+2) Run the following command:
 
 ```
-native-image -cp <classpath> --no-fallback -H:Path=${HOME}/native-image-experiments/test-discovery/target -H:Name=native-tests -Djunit.platform.listeners.uid.tracking.output.dir=${HOME}/native-image-experiments/test-discovery/target/test-ids -H:Class=org.graalvm.junit.platform.NativeImageJUnitLauncher --features=org.graalvm.junit.platform.JUnitPlatformFeature -DtestDiscovery
+native-image -cp /${HOME}/IdeaProjects/native-image-experiments/test-discovery/target/test-classes:/${HOME}/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:/${HOME}/.m2/repository/org/junit/vintage/junit-vintage-engine/5.8.1/junit-vintage-engine-5.8.1.jar:/${HOME}/.m2/repository/org/junit/platform/junit-platform-engine/1.8.1/junit-platform-engine-1.8.1.jar:/${HOME}/.m2/repository/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar:/${HOME}/.m2/repository/org/junit/platform/junit-platform-commons/1.8.1/junit-platform-commons-1.8.1.jar:/${HOME}/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/${HOME}/.m2/repository/com/google/errorprone/error_prone_annotations/2.7.1/error_prone_annotations-2.7.1.jar:/${HOME}/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/${HOME}/.m2/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/${HOME}/.m2/repository/com/google/auto/value/auto-value-annotations/1.8.1/auto-value-annotations-1.8.1.jar:/${HOME}/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/${HOME}/.m2/repository/com/google/truth/truth/1.1.3/truth-1.1.3.jar:/${HOME}/.m2/repository/org/checkerframework/checker-compat-qual/2.5.5/checker-compat-qual-2.5.5.jar:/${HOME}/.m2/repository/org/ow2/asm/asm/9.1/asm-9.1.jar:/${HOME}/.m2/repository/com/google/guava/guava/30.1.1-android/guava-30.1.1-android.jar:/${HOME}/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/${HOME}/.m2/repository/org/checkerframework/checker-qual/3.13.0/checker-qual-3.13.0.jar:/${HOME}/.m2/repository/com/google/j2objc/j2objc-annotations/1.3/j2objc-annotations-1.3.jar:/${HOME}/.m2/repository/org/junit/platform/junit-platform-console/1.8.1/junit-platform-console-1.8.1.jar:/${HOME}/.m2/repository/org/junit/platform/junit-platform-reporting/1.8.1/junit-platform-reporting-1.8.1.jar:/${HOME}/.m2/repository/org/junit/platform/junit-platform-launcher/1.8.1/junit-platform-launcher-1.8.1.jar:/${HOME}/.m2/repository/org/junit/platform/junit-platform-engine/1.8.1/junit-platform-engine-1.8.1.jar:/${HOME}/.m2/repository/org/junit/platform/junit-platform-commons/1.8.1/junit-platform-commons-1.8.1.jar:/${HOME}/.m2/repository/org/junit/jupiter/junit-jupiter/5.8.1/junit-jupiter-5.8.1.jar:/${HOME}/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.8.1/junit-jupiter-api-5.8.1.jar:/${HOME}/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.8.1/junit-jupiter-params-5.8.1.jar:/${HOME}/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.8.1/junit-jupiter-engine-5.8.1.jar:/${HOME}/.m2/repository/org/graalvm/buildtools/graalvm-reachability-metadata/0.9.18/graalvm-reachability-metadata-0.9.18.jar:/${HOME}/.m2/repository/org/graalvm/buildtools/junit-platform-native/0.9.18/junit-platform-native-0.9.18.jar --no-fallback -H:Path=/${HOME}/IdeaProjects/native-image-experiments/test-discovery/target -H:Name=native-tests -Djunit.platform.listeners.uid.tracking.output.dir=/${HOME}/IdeaProjects/native-image-experiments/test-discovery/target/test-ids -H:Class=org.graalvm.junit.platform.NativeImageJUnitLauncher --features=org.graalvm.junit.platform.JUnitPlatformFeature -DtestDiscovery
 ```
+
+The classpath of the application (including all the test dependencies) needs to be generated accurately in order to 
+successfully run this command. 
 
 Results in a successful build:
 ```
@@ -85,7 +100,7 @@ Top 10 packages in code area:                              Top 10 object types i
 
 Note that the test-ids file contains the following information: `[engine:junit-vintage]/[runner:com.example.MySampleTest]/[test:testNativeImage(com.example.MySampleTest)]`
 
-6) Now if we try to clear the test-ids directory and rerun the command above:
+3) Now if we try to clear the test-ids directory and rerun the command above:
 ```
 =======================================================================================================================
 GraalVM Native Image: Generating 'native-tests' (executable)...
@@ -152,12 +167,14 @@ Caused by: java.lang.ClassNotFoundException: kotlin.jvm.functions.Function0
 Failed generating 'native-tests' after 4.7s.
 ```
 
-7) Manually add the test-ids .txt file to the `target/test-ids/` directory:
+4) Manually add the test-ids.txt file to the `target/test-ids/` directory:
 ```
 $ vi junit-platform-unique-ids.txt // Copy and paste [engine:junit-vintage]/[runner:com.example.MySampleTest]/[test:testNativeImage(com.example.MySampleTest)]
 ```
-8) Re-run the `native-image` command from step 5. This results in a successful run.
-9) In order to create a test-ids file, the following code needs to be added to the maven-surefire plugin:
+5) Re-run the `native-image` command from step 1. This results in a successful run.
+
+## Additional Notes
+If we want the maven-surefire plugin to generate a test-ids file, we will need to add the following configuration: 
 
 ```
    <configuration>
@@ -167,3 +184,5 @@ $ vi junit-platform-unique-ids.txt // Copy and paste [engine:junit-vintage]/[run
        </systemProperties>
    </configuration>
 ```
+
+This configuration setting has not been tested with concurrent testing.
