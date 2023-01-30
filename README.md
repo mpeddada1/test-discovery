@@ -169,8 +169,9 @@ Failed generating 'native-tests' after 4.7s.
 
 4) Manually add the test-ids.txt file to the `target/test-ids/` directory:
 ```
-$ vi junit-platform-unique-ids.txt // Copy and paste [engine:junit-vintage]/[runner:com.example.MySampleTest]/[test:testNativeImage(com.example.MySampleTest)]
+echo "[engine:junit-vintage]/[runner:com.example.MySampleTest]/[test:testNativeImage(com.example.MySampleTest)]" > junit-platform-unique-ids.txt
 ```
+
 5) Re-run the `native-image` command from step 1. This results in a successful run.
 
 ## Additional Notes
